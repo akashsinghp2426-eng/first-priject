@@ -1,0 +1,288 @@
+# Email Agent Rules and Priority Classification
+
+## Overview
+This document defines the rules for email classification, priority assignment, and automated actions.
+
+## Priority Levels
+
+### CRITICAL (Immediate Reminder)
+**Score Threshold:** >= 0.8
+
+**Keywords:**
+- urgent, emergency, asap, immediately, critical
+- deadline today, action required now
+- server down, outage, incident
+- payment overdue, legal notice
+- security alert, breach
+
+**Actions:**
+- ✅ Create immediate reminder
+- 🔔 High-priority notification
+- 📌 Pin to top of reminders list
+- ⚠️ Consider sending SMS/desktop notification (future)
+
+**Examples:**
+- "URGENT: Server Down - Immediate Action Required"
+- "Emergency Meeting Today at 3 PM"
+- "CRITICAL: Payment Overdue - Account Suspension"
+
+---
+
+### IMPORTANT (Create Reminder)
+**Score Threshold:** >= 0.6
+
+**Keywords:**
+- meeting, deadline, review, approval
+- important, action required, please respond
+- reply needed, tomorrow, this week
+- schedule, appointment, interview
+- project update, milestone
+
+**Actions:**
+- ✅ Create reminder
+- 📝 Add to pending reminders list
+- 📌 Show in daily summary
+
+**Examples:**
+- "Meeting Request: Project Review Tomorrow"
+- "Deadline Approaching: Q4 Report Due Friday"
+- "Action Required: Please Review Document"
+
+---
+
+### NORMAL (Summary Only)
+**Score Threshold:** >= 0.3
+
+**Characteristics:**
+- Regular business emails
+- Informational updates
+- Non-urgent requests
+- General correspondence
+
+**Actions:**
+- 📄 Generate summary only
+- ❌ No reminder created
+- 📊 Include in daily digest
+
+**Examples:**
+- "Weekly Team Update"
+- "Project Status Report"
+- "Question About Documentation"
+
+---
+
+### LOW (Brief Summary, No Reminder)
+**Score Threshold:** < 0.3
+
+**Keywords:**
+- newsletter, promotion, unsubscribe
+- marketing, sale, offer, discount
+- bulk, automated, notification
+- social media, update, feed
+
+**Actions:**
+- 📄 Generate brief summary (50 words max)
+- ❌ No reminder
+- 🗑️ Consider auto-archiving (optional)
+
+**Examples:**
+- "Your Weekly Newsletter from TechCrunch"
+- "Special Offer: 50% Off All Products"
+- "Automated Receipt for Your Purchase"
+
+---
+
+## Sender-Based Rules
+
+### VIP Senders (Auto-Escalate Priority)
+Configure VIP senders in config.yaml:
+```yaml
+vip_senders:
+  - boss@company.com
+  - ceo@company.com
+  - important-client@client.com
+```
+
+**Rule:** Emails from VIP senders are automatically escalated one priority level (LOW → NORMAL, NORMAL → IMPORTANT).
+
+### Domain Rules
+```yaml
+domain_rules:
+  # Auto-low priority domains
+  low_priority_domains:
+    - newsletters.company.com
+    - notifications.social.com
+  
+  # Auto-high priority domains
+  high_priority_domains:
+    - company.com (internal)
+    - important-client.com
+```
+
+---
+
+## Time-Based Rules
+
+### Business Hours
+```yaml
+business_hours:
+  start: 09:00
+  end: 18:00
+  timezone: UTC
+  work_days: [Mon, Tue, Wed, Thu, Fri]
+```
+
+**Rules:**
+- Emails received outside business hours with NORMAL/LOW priority → Hold until next business day
+- CRITICAL/IMPORTANT emails → Notify immediately regardless of time
+
+### Weekend Handling
+- NORMAL/LOW priority emails → Batch for Monday morning summary
+- CRITICAL/IMPORTANT emails → Process normally
+
+---
+
+## Reply Generation Rules
+
+### Style Guidelines
+
+**Professional:**
+- Formal tone
+- Complete sentences
+- Proper greeting and signature
+- Use for: Business communications, clients, management
+
+**Casual:**
+- Friendly tone
+- Can use contractions
+- Brief but complete
+- Use for: Colleagues, familiar contacts
+
+**Concise:**
+- Very brief
+- Get straight to point
+- Minimal pleasantries
+- Use for: Quick confirmations, routine responses
+
+### Auto-Reply Conditions
+```yaml
+auto_reply:
+  enabled: false  # Disabled by default for safety
+  
+  # Conditions for auto-reply (if enabled)
+  conditions:
+    - sender_in_contacts: true
+    - priority: NORMAL
+    - email_type: informational
+    - requires_response: false
+```
+
+**⚠️ WARNING:** Auto-reply is disabled by default. Always review before sending!
+
+---
+
+## Content Analysis Rules
+
+### Urgency Detection
+Increase priority score if email contains:
+- Time expressions: "today", "tomorrow", "by EOD", "within 2 hours"
+- Urgent markers: "!", "URGENT", "ASAP"
+- Action verbs: "need", "require", "must", "should"
+
+### Sentiment Analysis
+- Negative sentiment + action words → Increase priority
+- Positive sentiment + informational → Decrease priority
+
+### Thread Position
+- First email in thread → Normal processing
+- Reply in active thread → Check for unanswered questions
+- Long thread (>5 messages) → Summarize entire conversation
+
+---
+
+## Exception Handling
+
+### False Positives
+If an email is incorrectly classified:
+1. User can manually adjust priority
+2. System learns from correction (future ML feature)
+3. Add sender/domain to exception list
+
+### False Negatives
+If important email missed:
+1. Check spam/junk folder manually
+2. Add sender to VIP list
+3. Create custom rule for similar emails
+
+---
+
+## Security Rules
+
+### Never Auto-Reply To:
+- Emails from unknown senders
+- Emails marked as spam
+- Emails with suspicious links/attachments
+- Emails requesting sensitive information
+
+### Red Flags (Mark for Manual Review):
+- Requests for passwords or credentials
+- Unexpected attachments from known contacts
+- Links to unfamiliar domains
+- Poor grammar/spelling in business context
+- Urgent financial requests
+
+---
+
+## Customization
+
+### Adding Custom Rules
+Edit `config/rules.yaml`:
+```yaml
+custom_rules:
+  - name: "Project Alpha Emails"
+    condition:
+      subject_contains: ["Project Alpha", "Alpha Initiative"]
+      OR:
+        sender_domain: "alpha-project.com"
+    action:
+      priority: IMPORTANT
+      add_label: "Project Alpha"
+  
+  - name: "Invoice Emails"
+    condition:
+      subject_contains: ["invoice", "receipt", "payment"]
+    action:
+      priority: IMPORTANT
+      create_reminder: true
+      reminder_note: "Follow up on payment"
+```
+
+### Disabling Rules
+```yaml
+disabled_rules:
+  - rule_name_1
+  - rule_name_2
+```
+
+---
+
+## Testing Rules
+
+### Test Mode
+Run agent in test mode to see how emails would be classified:
+```bash
+python main.py --test-rules
+```
+
+### Rule Validation
+Before deploying new rules:
+1. Run on historical emails (last 100)
+2. Review classification accuracy
+3. Adjust thresholds as needed
+4. Deploy to production
+
+---
+
+## Version History
+- v1.0.0: Initial rule set
+- Current: Hugging Face lightweight model integration
