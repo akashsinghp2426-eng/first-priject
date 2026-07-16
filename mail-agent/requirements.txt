@@ -1,0 +1,26 @@
+# Email Agent Dependencies - Hugging Face Version
+# Lightweight AI models, no large downloads required
+
+# Core email handling (built-in)
+# imaplib - Python standard library
+# smtplib - Python standard library
+
+# Hugging Face for lightweight AI
+transformers==4.38.0
+torch==2.2.0
+accelerate==0.27.0
+huggingface-hub==0.21.0
+sentencepiece==0.2.0
+
+# Configuration and utilities
+python-dotenv==1.0.1
+PyYAML==6.0.1
+schedule==1.2.0
+
+# Database for reminders (built-in sqlite3)
+
+# Logging and utilities
+colorama==0.4.6
+
+# Testing
+pytest==8.0.0

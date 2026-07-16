@@ -1,0 +1,92 @@
+# Email Reply Templates
+
+# Professional Templates
+professional:
+  acknowledgment: |
+    Thank you for your email. I have received your message and will review it shortly. 
+    I will get back to you soon with a detailed response.
+    
+    Best regards,
+    [Your Name]
+  
+  meeting_confirmation: |
+    Thank you for the meeting invitation. I confirm my availability for the scheduled time.
+    I look forward to our discussion.
+    
+    Best regards,
+    [Your Name]
+  
+  information_request: |
+    Thank you for reaching out. I appreciate your interest and will gather the requested information.
+    I will send you a comprehensive response by [timeframe].
+    
+    Best regards,
+    [Your Name]
+  
+  follow_up: |
+    Following up on our previous conversation regarding [topic].
+    Please let me know if there are any updates or if you need additional information from my end.
+    
+    Best regards,
+    [Your Name]
+
+# Casual Templates
+casual:
+  acknowledgment: |
+    Thanks for your email! Got your message and will check it out. 
+    Will get back to you soon!
+    
+    Cheers,
+    [Your Name]
+  
+  meeting_confirmation: |
+    Thanks for the invite! I'll be there. Looking forward to it!
+    
+    Best,
+    [Your Name]
+  
+  quick_response: |
+    Hey! Thanks for reaching out. Let me look into this and I'll circle back shortly.
+    
+    Talk soon,
+    [Your Name]
+
+# Concise Templates
+concise:
+  acknowledgment: |
+    Thank you for your email. I'll review and respond soon.
+  
+  confirmation: |
+    Confirmed. Thank you.
+  
+  received: |
+    Received. Will review and follow up.
+  
+  thanks: |
+    Thank you. Noted.
+
+# Special Scenarios
+special:
+  out_of_office: |
+    Thank you for your email. I am currently out of the office with limited access to email.
+    I will respond to your message when I return on [return date].
+    
+    For urgent matters, please contact [alternative contact] at [contact info].
+    
+    Best regards,
+    [Your Name]
+  
+  delayed_response: |
+    Please accept my apologies for the delayed response. 
+    Thank you for your patience. Regarding your inquiry...
+    
+    Best regards,
+    [Your Name]
+  
+  escalation: |
+    Thank you for bringing this to my attention. 
+    I am escalating this matter to the appropriate team for immediate review.
+    You can expect a response within [timeframe].
+    
+    Best regards,
+    [Your Name]

@@ -1,0 +1,91 @@
+# Email Agent Configuration
+
+# Email Settings
+email:
+  # Provider: gmail or outlook
+  provider: gmail
+  
+  # IMAP Settings (auto-configured based on provider)
+  imap_server: auto  # auto, or specify custom server
+  imap_port: auto    # auto, or specify custom port
+  
+  # SMTP Settings (auto-configured based on provider)
+  smtp_server: auto
+  smtp_port: auto
+  
+  # Check interval in minutes
+  check_interval: 15
+  
+  # Maximum emails to process per check
+  max_emails_per_check: 50
+  
+  # Folder to monitor
+  inbox_folder: INBOX
+  
+  # Mark emails as read after processing
+  mark_as_read: true
+  
+  # Move processed emails to folder (optional, leave empty to skip)
+  move_to_folder: ""
+
+# AI/LLM Settings
+llm:
+  # Provider: huggingface (recommended for lightweight), openai, groq
+  provider: huggingface
+  
+  # Model settings for Hugging Face
+  model_name: google/flan-t5-base  # Lightweight model (~300MB)
+  max_length: 512
+  temperature: 0.7
+  
+  # API token (required for Hugging Face)
+  # Get from: https://huggingface.co/settings/tokens
+  api_token_env: HF_API_TOKEN
+  
+  # Summarization settings
+  summary_max_length: 150
+  summary_min_length: 30
+  
+  # Reply generation settings
+  reply_style: professional  # professional, casual, concise
+  reply_max_length: 200
+
+# Reminder Settings
+reminders:
+  # Enable reminders
+  enabled: true
+  
+  # Database file
+  db_path: reminders.db
+  
+  # Auto-clean reminders older than (days)
+  auto_clean_days: 30
+  
+  # Priority thresholds
+  critical_threshold: 0.8
+  important_threshold: 0.6
+  
+  # Notification methods
+  notify_methods:
+    - console  # console, email, desktop (more coming soon)
+
+# Logging Settings
+logging:
+  level: INFO  # DEBUG, INFO, WARNING, ERROR
+  file: logs/mail_agent.log
+  max_size_mb: 10
+  backup_count: 5
+  
+# Advanced Settings
+advanced:
+  # Retry settings
+  max_retries: 3
+  retry_delay_seconds: 5
+  
+  # SSL/TLS settings
+  use_ssl: true
+  ssl_verify: true
+  
+  # Timeout settings (seconds)
+  connection_timeout: 30
+  read_timeout: 60

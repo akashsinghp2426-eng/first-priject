@@ -1,0 +1,27 @@
+```
+# Dependencies
+.venv/
+venv/
+__pycache__/
+
+# Environment
+.env
+.env.local
+*.env.*
+
+# Logs and temp files
+*.log
+*.tmp
+
+# Editors
+.vscode/
+.idea/
+
+# Build/dist artifacts
+build/
+dist/
+*.pyc
+
+# Compressed files
+*.tar.gz
+```
